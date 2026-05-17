@@ -1,0 +1,35 @@
+{
+  "name": "neztep",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tailwindcss/postcss": "^4.1.17",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "next": "15.5.18",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "15.5.18",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
