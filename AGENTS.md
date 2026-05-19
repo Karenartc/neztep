@@ -1,3 +1,8 @@
+````md
+# AGENTS.md — Project Rules for AI Coding Agents
+# This file is read by Antigravity (v1.20.3+), Cursor, Claude Code, Codex, and compatible AI development agents.
+# Rules here apply globally unless tool-specific override files exist.
+
 # =========================================================
 # 1. PROJECT OVERVIEW
 # =========================================================
@@ -140,12 +145,12 @@ Responsible for:
 - **UI Components:** shadcn/ui
 - **Icons:** Lucide React
 - **Backend:** Next.js API Routes (Backend For Frontend)
-- **Authentication:** Firebase Authentication
-- **Database:** Cloud Firestore (multitenant)
-- **Admin SDK:** Firebase Admin SDK
+- **Authentication:** Firebase Authentication (future implementation)
+- **Database:** Cloud Firestore (future implementation)
+- **Admin SDK:** Firebase Admin SDK (future implementation)
 - **Hosting:** Vercel
-- **PWA:** Yes
-- **Testing:** Vitest (unit/integration), Playwright (E2E)
+- **PWA:** Planned, not current branch priority
+- **Testing:** Vitest (current), Playwright (future)
 - **Package Manager:** pnpm
 - **Design:** Figma
 - **Project Management:** Trello
@@ -352,29 +357,40 @@ colors: {
 
 # =========================================================
 
-Mandatory:
+## Current Implemented
 
 * Button
 * Input
-* Select
-* Textarea
-* Checkbox
 * Card
 * Badge
 * Alert
-* Modal
+* Dialog
+* DropdownMenu
+* FormField
+* ProgressBar
+* Separator
+* Skeleton
+* Table
 * Tabs
+* Avatar
 * Sidebar
 * Navbar
-* ProgressBar
-* Stepper
 * EmptyState
 * StatCard
+
+## Future Required
+
+* Select
+* Textarea
+* Checkbox
+* Stepper
 * SearchInput
-* FormField
 * PageHeader
 * SectionHeader
-* DataTable
+* DataTable (advanced)
+* Toast system
+
+## Component Rules
 
 All components require:
 
@@ -414,15 +430,21 @@ Minimum: WCAG 2.1 AA
 
 # =========================================================
 
-## Public
+## Current Implemented
 
 ```txt
 /
- /login
- /register
+/design-system
 ```
 
-## Student
+## Planned Public
+
+```txt
+/login
+/register
+```
+
+## Planned Student
 
 ```txt
 /app
@@ -434,7 +456,7 @@ Minimum: WCAG 2.1 AA
 /app/support
 ```
 
-## Admin
+## Planned Admin
 
 ```txt
 /admin
@@ -445,43 +467,102 @@ Minimum: WCAG 2.1 AA
 /admin/users
 ```
 
-## Internal
+---
+
+# =========================================================
+
+# 14. CURRENT IMPLEMENTATION STATUS
+
+# =========================================================
+
+## Current Branch Status
+
+The current branch implements the Neztep Design System foundation only.
+
+### Implemented:
+
+* Next.js App Router scaffold
+* `/`
+* `/design-system`
+* CSS variable token system
+* Light/Dark preview foundation (local preview, no persistence)
+* Tailwind v4 design tokens
+* Reusable UI component system
+* Navbar / Sidebar
+* Card spacing system
+* Dialog / Dropdown
+* Typography and spacing showcase
+* Mock data
+* Vitest basic unit test
+* ESLint validation
+* Modularized design-system showcase architecture
+
+### Current Design System Structure
 
 ```txt
-/design-system
+src/components/ui
+src/components/layout
+src/components/student
+src/components/design-system
 ```
+
+### Design System Rule
+
+`src/app/design-system/page.tsx` must remain a composition shell only.
+Large showcase sections must be split into modular components.
+
+### Not Yet Implemented
+
+* Firebase Authentication
+* Firestore
+* API routes
+* Protected routes
+* `/login`
+* `/register`
+* `/app/*`
+* `/admin/*`
+* Real dashboards
+* PWA
+* Deployment
+* Multitenant runtime theming
+
+### Theme Architecture
+
+* CSS variables support future institution theming
+* Default Neztep palette active
+* No tenant runtime switching yet
+
+### Testing
+
+* Vitest configured
+* Basic utility test only
+* Playwright and E2E pending
 
 ---
 
 # =========================================================
 
-# 14. TESTING REQUIREMENTS
+# 15. TESTING REQUIREMENTS
 
 # =========================================================
 
-## Mandatory
+## Current
+
+* `pnpm test` (Vitest basic)
+* utility-level validation
+
+## Future Mandatory
 
 * Unit tests for utilities
 * Integration tests for API routes
 * E2E for user-facing flows
 * Minimum 80% coverage on new code
-* Run `pnpm test` before completion
-
-## MVP Critical Tests
-
-* auth
-* onboarding
-* dashboard
-* search
-* FAQ
-* escalation
-* admin CRUD
 
 ---
 
 # =========================================================
 
-# 15. SAFETY GUARDRAILS (CRITICAL)
+# 16. SAFETY GUARDRAILS (CRITICAL)
 
 # =========================================================
 
@@ -500,7 +581,7 @@ Minimum: WCAG 2.1 AA
 
 # =========================================================
 
-# 16. GIT CONVENTIONS
+# 17. GIT CONVENTIONS
 
 # =========================================================
 
@@ -523,7 +604,7 @@ Minimum: WCAG 2.1 AA
 
 # =========================================================
 
-# 17. PROJECT STRUCTURE
+# 18. PROJECT STRUCTURE
 
 # =========================================================
 
@@ -534,12 +615,13 @@ Minimum: WCAG 2.1 AA
     /ui
     /layout
     /student
-    /admin
+    /design-system
+    /admin (future)
   /lib
-    /firebase
+    /firebase (future)
     /mock
     /utils
-    /validators
+    /validators (future)
   /types
   /styles
 ```
@@ -548,7 +630,7 @@ Minimum: WCAG 2.1 AA
 
 # =========================================================
 
-# 18. MOCK DATA RULES
+# 19. MOCK DATA RULES
 
 # =========================================================
 
@@ -569,7 +651,7 @@ Location:
 
 # =========================================================
 
-# 19. COMMUNICATION RULES
+# 20. COMMUNICATION RULES
 
 # =========================================================
 
@@ -585,24 +667,24 @@ Location:
 
 # =========================================================
 
-# 20. CURRENT PRIORITY
+# 21. CURRENT PRIORITY
 
 # =========================================================
 
-1. Design System
+1. README / Documentation
 2. Layout Foundation
-3. Student Dashboard
-4. Guided Onboarding
-5. Institutional Resources
-6. FAQ Chatbot
-7. Campus Map
-8. Admin Dashboard
+3. Public Pages (Login/Register)
+4. Student Dashboard Shell
+5. Admin Dashboard Shell
+6. Guided Onboarding UI
+7. Firebase/Auth Integration
+8. PWA
 
 ---
 
 # =========================================================
 
-# 21. DEFINITION OF DONE
+# 22. DEFINITION OF DONE
 
 # =========================================================
 
