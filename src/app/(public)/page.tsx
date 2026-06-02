@@ -6,9 +6,6 @@ import { LandingHero } from "@/components/landing/landing-hero";
 import { LandingHowItWorks } from "@/components/landing/landing-how-it-works";
 import { LandingNav } from "@/components/landing/landing-nav";
 
-/**
- * Renders the public Neztep landing page as a thin composition shell.
- */
 export default function HomePage() {
   return (
     <div className="min-h-screen">
