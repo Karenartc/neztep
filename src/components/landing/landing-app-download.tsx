@@ -6,9 +6,9 @@ import Image from "next/image";
  */
 export function LandingAppDownload() {
   return (
-    <section id="descargar" className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-14 px-8 py-20 lg:grid-cols-2">
+    <section id="descargar" className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-14 px-4 py-20 sm:px-8 lg:grid-cols-2">
       <div>
-        <h2 className="mb-3.5 text-[40px] font-extrabold tracking-[-0.025em] text-text-primary">
+        <h2 className="mb-3.5 text-[32px] font-extrabold tracking-[-0.025em] text-text-primary sm:text-[40px]">
           Lleva Neztep en <span className="text-primary">tu bolsillo</span>
         </h2>
         <p className="mb-8 text-[17px] leading-[1.65] text-text-secondary">
@@ -26,7 +26,7 @@ export function LandingAppDownload() {
         </div>
       </div>
 
-      <div className="flex justify-center gap-4">
+      <div className="flex flex-wrap justify-center gap-4">
         <div className="w-40 rounded-[28px] bg-[#0f172a] p-2 shadow-[0_24px_48px_rgba(15,23,42,.2)]">
           <div className="flex aspect-[9/19] flex-col items-center justify-center gap-2 rounded-[22px] bg-gradient-to-b from-[#7b5be0] to-primary p-6">
             <Image

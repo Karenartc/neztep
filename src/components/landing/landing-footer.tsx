@@ -16,7 +16,7 @@ import Image from "next/image";
  */
 export function LandingFooter() {
   return (
-    <footer className="bg-[#0f172a] px-8 pb-7 pt-12">
+    <footer className="bg-[#0f172a] px-4 pb-7 pt-12 sm:px-8">
       <div className="mx-auto max-w-[1200px]">
         <div className="mb-10 grid grid-cols-2 gap-10 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div className="space-y-3">

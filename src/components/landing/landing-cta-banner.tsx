@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
  */
 export function LandingCtaBanner() {
   return (
-    <section className="border-b border-t border-[#ddd6fe] bg-accent px-8 py-[60px] text-center">
+    <section className="border-b border-t border-[#ddd6fe] bg-accent px-4 py-[60px] text-center sm:px-8">
       <div className="mx-auto max-w-[640px]">
-        <h2 className="mb-2.5 text-[36px] font-extrabold tracking-[-0.025em] text-text-primary">
+        <h2 className="mb-2.5 text-[28px] font-extrabold tracking-[-0.025em] text-text-primary sm:text-[36px]">
           Lista para transformar la integracion estudiantil?
         </h2>
         <p className="mb-7 text-[16px] leading-[1.65] text-text-secondary">

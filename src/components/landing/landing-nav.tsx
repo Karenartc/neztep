@@ -11,7 +11,7 @@ export function LandingNav() {
       className="sticky top-0 z-40 border-b border-border backdrop-blur-md"
       style={{ background: "rgba(248,250,252,0.88)" }}
     >
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-10 px-8">
+      <div className="mx-auto flex h-16 max-w-[1200px] flex-wrap items-center gap-4 px-4 sm:gap-10 sm:px-8">
         <Link className="flex items-center gap-3 no-underline" href="/">
           <Image
             src="/logopurple.png"

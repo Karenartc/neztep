@@ -20,7 +20,7 @@ export function LandingHero() {
             Plataforma SaaS para Educación Superior
           </div>
 
-          <h1 className="mb-5 text-[42px] font-extrabold leading-[1.1] tracking-[-0.03em] text-text-primary lg:text-[52px]">
+          <h1 className="mb-5 text-[32px] font-extrabold leading-[1.05] tracking-[-0.03em] text-text-primary sm:text-[42px] lg:text-[52px]">
             La mejor experiencia de{" "}
             <span className="bg-gradient-to-br from-[#7c5cdb] to-[#a78bfa] bg-clip-text text-transparent">
               integración
@@ -28,7 +28,7 @@ export function LandingHero() {
             para tus estudiantes
           </h1>
 
-          <p className="mb-8 max-w-[480px] text-[18px] leading-[1.65] text-text-secondary">
+          <p className="mb-8 max-w-[100%] sm:max-w-[480px] text-[16px] leading-[1.65] text-text-secondary sm:text-[18px]">
             Neztep acompaña a los estudiantes desde el día cero, centralizando
             información, procesos y recursos en una sola plataforma.
           </p>
@@ -56,7 +56,7 @@ export function LandingHero() {
               </div>
             </div>
 
-            <div className="grid min-h-[340px] grid-cols-[180px_1fr] bg-background">
+            <div className="grid min-h-[340px] grid-cols-1 md:grid-cols-[180px_1fr] bg-background">
               <div className="flex flex-col gap-0.5 border-r border-border bg-surface p-3.5">
                 <div className="pb-3.5 pl-1.5 text-[15px] font-extrabold italic text-primary">
                   N
@@ -96,7 +96,7 @@ export function LandingHero() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1.5">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {LANDING_SNAPSHOT_CARDS.map(({ title, subtitle }) => (
                     <div
                       key={title}

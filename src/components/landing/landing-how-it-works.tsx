@@ -6,14 +6,14 @@ import { LANDING_STEPS } from "@/components/landing/landing-data";
 export function LandingHowItWorks() {
   return (
     <section
-      className="px-8 py-20"
+      className="px-4 py-20 sm:px-8"
       style={{
         background:
           "linear-gradient(160deg,#7b5be0 0%,#5b3cc4 55%,#47279e 100%)",
       }}
     >
       <div className="mx-auto max-w-[1200px]">
-        <h2 className="mb-2 text-center text-[38px] font-extrabold tracking-[-0.025em] text-white">
+        <h2 className="mb-2 text-center text-[30px] font-extrabold tracking-[-0.025em] text-white sm:text-[38px]">
           ¿Cómo funciona?
         </h2>
         <p className="mb-12 text-center text-[17px] text-white/75">

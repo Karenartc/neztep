@@ -6,13 +6,13 @@ import { LANDING_FEATURES } from "@/components/landing/landing-data";
  */
 export function LandingFeatures() {
   return (
-    <section id="funcionalidades" className="mx-auto max-w-[1200px] px-8 py-20">
+    <section id="funcionalidades" className="mx-auto max-w-[1200px] px-4 py-20 sm:px-8">
       <div className="mb-12 text-center">
         <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-[12px] font-semibold uppercase tracking-[0.04em] text-primary">
           <Sparkles aria-hidden="true" className="h-3 w-3" />
           Funcionalidades
         </div>
-        <h2 className="mb-3 text-[38px] font-extrabold tracking-[-0.025em] text-text-primary">
+        <h2 className="mb-3 text-[28px] font-extrabold tracking-[-0.025em] text-text-primary sm:text-[38px]">
           Todo lo que tu institución necesita
         </h2>
         <p className="mx-auto max-w-[540px] text-[17px] leading-[1.65] text-text-secondary">
@@ -21,7 +21,7 @@ export function LandingFeatures() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 inline-flex items-center">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {LANDING_FEATURES.map(({ icon: Icon, title, description }) => (
           <div
             key={title}
