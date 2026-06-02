@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { PrivacyPolicyDialog, TermsDialog } from "@/components/legal/legal-dialogs";
 import { institutions } from "@/lib/mock/institutions";
 import {
   validateEmail,
@@ -227,8 +228,7 @@ export function RegisterForm() {
 
       <label
         className={cn(
-          "flex min-h-11 cursor-pointer items-start gap-3 rounded-md border border-border bg-surface p-3 text-sm text-text-primary",
-          "focus-within:outline focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-ring",
+          "flex min-h-11 cursor-pointer items-start gap-3 p-3 text-sm text-text-primary"
         )}
         htmlFor="acceptTerms"
       >
@@ -242,13 +242,23 @@ export function RegisterForm() {
         />
         <span>
           He leído y acepto los{" "}
-          <Link className="font-medium text-primary hover:underline" href="#">
-            Términos y Condiciones
-          </Link>{" "}
+          <TermsDialog>
+            <button
+              className="font-medium text-primary hover:underline"
+              type="button"
+            >
+              Términos y Condiciones
+            </button>
+          </TermsDialog>{" "}
           y la{" "}
-          <Link className="font-medium text-primary hover:underline" href="#">
-            Política de Privacidad
-          </Link>
+          <PrivacyPolicyDialog>
+            <button
+              className="font-medium text-primary hover:underline"
+              type="button"
+            >
+              Política de Privacidad
+            </button>
+          </PrivacyPolicyDialog>
           .
         </span>
       </label>
