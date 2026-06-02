@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Neztep Design System",
-  description: "Initial visual foundation for Neztep institutional onboarding.",
+  title: "Neztep",
+  description: "Plataforma SaaS para onboarding univesitario.",
 };
 
 interface RootLayoutProps {
