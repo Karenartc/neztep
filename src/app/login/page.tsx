@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginForm } from "@/components/auth/login-form";
-import { NeztepLogo } from "@/components/auth/neztep-logo";
 
 export const metadata: Metadata = {
   title: "Login",

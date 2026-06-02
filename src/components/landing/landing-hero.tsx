@@ -1,6 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Building2, TrendingUp, Zap } from "lucide-react";
+import { Building2, Zap } from "lucide-react";
 import {
   LANDING_SIDEBAR_ITEMS,
   LANDING_SNAPSHOT_CARDS,
