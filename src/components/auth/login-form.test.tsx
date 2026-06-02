@@ -23,7 +23,7 @@ describe("LoginForm", () => {
     render(<LoginForm />);
 
     await user.type(screen.getByLabelText(/Correo institucional/i), "estudiante@institucion.cl");
-    await user.type(screen.getByLabelText(/Contraseña/i, { selector: "input" }), "Password1!");
+    await user.type(screen.getByLabelText(/Contraseña/i, { selector: "input" }), "ValidTest1!");
 
     const submitButton = screen.getByRole("button", { name: /Iniciar sesión/i });
     await user.click(submitButton);

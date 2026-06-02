@@ -37,9 +37,9 @@ describe("auth validation", () => {
   });
 
   it("validates password confirmation matching", () => {
-    expect(validateConfirmPassword("Password1!", "")).toBe("Confirma tu contraseña.");
-    expect(validateConfirmPassword("Password1!", "Other1!")).toBe("Las contraseñas deben coincidir.");
-    expect(validateConfirmPassword("Password1!", "Password1!")).toBeUndefined();
+    expect(validateConfirmPassword("ValidTest1!", "")).toBe("Confirma tu contraseña.");
+    expect(validateConfirmPassword("ValidTest1!", "Different1!")).toBe("Las contraseñas deben coincidir.");
+    expect(validateConfirmPassword("ValidTest1!", "ValidTest1!")).toBeUndefined();
   });
 
   it("requires institution and selected program fields when institution is chosen", () => {
