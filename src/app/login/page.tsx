@@ -4,8 +4,8 @@ import { LoginForm } from "@/components/auth/login-form";
 import { NeztepLogo } from "@/components/auth/neztep-logo";
 
 export const metadata: Metadata = {
-  title: "Login | Neztep",
-  description: "Institutional sign-in interface for Neztep.",
+  title: "Login",
+  description: "Institutional sign-in interface.",
 };
 
 export default function LoginPage() {
