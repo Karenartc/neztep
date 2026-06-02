@@ -1,25 +1,26 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
-import { NeztepLogo } from "@/components/auth/neztep-logo";
-import {
-  AccountStep,
-  ConfirmationStep,
-  InstitutionStep,
-  ProfileStep,
-  type RegistrationDraft,
-} from "@/components/auth/register-step-fields";
+import { ArrowRight, Mail } from "lucide-react";
+import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
-import { Stepper, type StepperStep } from "@/components/ui/stepper";
+import { FormField } from "@/components/ui/form-field";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { institutions } from "@/lib/mock/institutions";
+import { cn } from "@/lib/utils";
 
-const steps: StepperStep[] = [
-  { id: "account", title: "Cuenta", description: "Datos de acceso" },
-  { id: "institution", title: "Institucion", description: "Campus y carrera" },
-  { id: "profile", title: "Perfil", description: "Objetivo inicial" },
-  { id: "confirmation", title: "Confirmacion", description: "Revision final" },
-];
+interface RegistrationDraft {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  institutionId: string;
+  career: string;
+  campus: string;
+  acceptTerms: boolean;
+}
 
 const initialDraft: RegistrationDraft = {
   fullName: "",
@@ -27,190 +28,173 @@ const initialDraft: RegistrationDraft = {
   password: "",
   confirmPassword: "",
   institutionId: "",
-  campus: "",
   career: "",
-  academicLevel: "",
-  entryYear: "",
-  onboardingGoal: "",
-  receiveUpdates: true,
+  campus: "",
   acceptTerms: false,
 };
 
-/**
- * Renders the UI-only multistep registration form for institutional users.
- */
 export function RegisterForm() {
-  const [currentStep, setCurrentStep] = useState(1);
   const [draft, setDraft] = useState<RegistrationDraft>(initialDraft);
+
   const selectedInstitution = institutions.find(
-    (institution) => institution.institutionId === draft.institutionId,
+    (inst) => inst.institutionId === draft.institutionId,
   );
   const campusOptions = toOptions(selectedInstitution?.campuses ?? []);
   const careerOptions = toOptions(selectedInstitution?.careers ?? []);
-  const institutionOptions = institutions.map((institution) => ({
-    value: institution.institutionId,
-    label: institution.name,
+  const institutionOptions = institutions.map((inst) => ({
+    value: inst.institutionId,
+    label: inst.name,
   }));
 
-  function updateField<Key extends keyof RegistrationDraft>(
-    field: Key,
-    value: RegistrationDraft[Key],
+  const passwordError =
+    draft.confirmPassword && draft.password !== draft.confirmPassword
+      ? "Las contraseñas deben coincidir."
+      : undefined;
+
+  const canSubmit =
+    draft.acceptTerms &&
+    !passwordError &&
+    draft.fullName.length > 0 &&
+    draft.email.length > 0 &&
+    draft.password.length > 0;
+
+  function updateField<K extends keyof RegistrationDraft>(
+    field: K,
+    value: RegistrationDraft[K],
   ) {
-    setDraft((current) => resetDependentFields({ ...current, [field]: value }, field));
+    setDraft((prev) => {
+      const next = { ...prev, [field]: value };
+      if (field === "institutionId") {
+        next.career = "";
+        next.campus = "";
+      }
+      return next;
+    });
   }
 
   return (
-    <section className="w-full max-w-5xl overflow-hidden rounded-xl border border-border bg-surface shadow-soft">
-      <div className="grid lg:grid-cols-[18rem_1fr]">
-        <RegisterSidebar />
-        <form
-          className="space-y-8 p-6 sm:p-8 lg:p-10"
-          onSubmit={(event) => event.preventDefault()}
-        >
-          <Stepper currentStep={currentStep} steps={steps} />
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-primary">
-              Paso {currentStep} de {steps.length}
-            </p>
-            <h1 className="text-2xl font-semibold text-text-primary">
-              {steps[currentStep - 1].title}
-            </h1>
-            <p className="text-sm text-text-secondary">
-              Completa la informacion institucional para preparar tu cuenta.
-            </p>
-          </div>
-          <StepContent
-            campusOptions={campusOptions}
-            careerOptions={careerOptions}
-            currentStep={currentStep}
-            draft={draft}
-            institutionName={selectedInstitution?.name ?? ""}
-            institutionOptions={institutionOptions}
-            onChange={updateField}
+    <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+      <FormField id="fullName" label="Nombre completo">
+        <Input
+          id="fullName"
+          onChange={(e) => updateField("fullName", e.target.value)}
+          placeholder="Ingresa tu nombre completo"
+          value={draft.fullName}
+        />
+      </FormField>
+
+      <FormField id="email" label="Correo institucional">
+        <div className="relative">
+          <Input
+            className="pe-9"
+            id="email"
+            onChange={(e) => updateField("email", e.target.value)}
+            placeholder="tucorreo@institucion.cl"
+            type="email"
+            value={draft.email}
           />
-          <RegisterActions
-            canComplete={draft.acceptTerms}
-            currentStep={currentStep}
-            onBack={() => setCurrentStep((step) => Math.max(1, step - 1))}
-            onNext={() => setCurrentStep((step) => Math.min(steps.length, step + 1))}
+          <Mail
+            aria-hidden="true"
+            className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
           />
-        </form>
-      </div>
-    </section>
-  );
-}
-
-interface StepContentProps {
-  campusOptions: { value: string; label: string }[];
-  careerOptions: { value: string; label: string }[];
-  currentStep: number;
-  draft: RegistrationDraft;
-  institutionName: string;
-  institutionOptions: { value: string; label: string }[];
-  onChange: <Key extends keyof RegistrationDraft>(
-    field: Key,
-    value: RegistrationDraft[Key],
-  ) => void;
-}
-
-function StepContent({
-  campusOptions,
-  careerOptions,
-  currentStep,
-  draft,
-  institutionName,
-  institutionOptions,
-  onChange,
-}: StepContentProps) {
-  if (currentStep === 1) {
-    return <AccountStep draft={draft} onChange={onChange} />;
-  }
-
-  if (currentStep === 2) {
-    return (
-      <InstitutionStep
-        campusOptions={campusOptions}
-        careerOptions={careerOptions}
-        draft={draft}
-        institutionOptions={institutionOptions}
-        onChange={onChange}
-      />
-    );
-  }
-
-  if (currentStep === 3) {
-    return <ProfileStep draft={draft} onChange={onChange} />;
-  }
-
-  return <ConfirmationStep draft={draft} institutionName={institutionName} />;
-}
-
-interface RegisterActionsProps {
-  canComplete: boolean;
-  currentStep: number;
-  onBack: () => void;
-  onNext: () => void;
-}
-
-function RegisterActions({
-  canComplete,
-  currentStep,
-  onBack,
-  onNext,
-}: RegisterActionsProps) {
-  const isFinalStep = currentStep === steps.length;
-
-  return (
-    <div className="flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:justify-end">
-      {currentStep > 1 && (
-        <Button onClick={onBack} type="button" variant="secondary">
-          <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-          Volver
-        </Button>
-      )}
-      <Button disabled={isFinalStep && !canComplete} onClick={onNext} type="button">
-        {isFinalStep ? "Completar registro" : "Continuar"}
-        {isFinalStep ? (
-          <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
-        ) : (
-          <ArrowRight aria-hidden="true" className="h-4 w-4" />
-        )}
-      </Button>
-    </div>
-  );
-}
-
-function RegisterSidebar() {
-  return (
-    <aside className="hidden border-r border-border bg-muted p-8 lg:flex lg:flex-col lg:justify-between">
-      <div className="space-y-10">
-        <NeztepLogo />
-        <div className="space-y-3">
-          <h2 className="text-2xl font-semibold text-text-primary">Crea tu cuenta</h2>
-          <p className="text-sm leading-6 text-text-secondary">
-            Vincula tu perfil de estudiante con una institucion, campus y programa.
-          </p>
         </div>
+      </FormField>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <FormField id="password" label="Contraseña">
+          <PasswordInput
+            id="password"
+            onChange={(e) => updateField("password", e.target.value)}
+            placeholder="contraseña"
+            value={draft.password}
+          />
+        </FormField>
+        <FormField error={passwordError} id="confirmPassword" label="Confirmar contraseña">
+          <PasswordInput
+            error={Boolean(passwordError)}
+            id="confirmPassword"
+            onChange={(e) => updateField("confirmPassword", e.target.value)}
+            placeholder="contraseña"
+            value={draft.confirmPassword}
+          />
+        </FormField>
       </div>
-      <div className="rounded-lg border border-border bg-surface p-4 text-sm text-text-secondary">
-        La cuenta queda preparada para guardarse como usuario tenant-scoped cuando
-        Firebase se implemente.
+
+      <FormField id="institutionId" label="Institución">
+        <Select
+          id="institutionId"
+          onChange={(e) => updateField("institutionId", e.target.value)}
+          options={institutionOptions}
+          placeholder="Selecciona tu institución"
+          value={draft.institutionId}
+        />
+      </FormField>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <FormField id="career" label="Carrera">
+          <Select
+            disabled={!draft.institutionId}
+            id="career"
+            onChange={(e) => updateField("career", e.target.value)}
+            options={careerOptions}
+            placeholder="Selecciona tu carrera"
+            value={draft.career}
+          />
+        </FormField>
+        <FormField id="campus" label="Sede / Campus">
+          <Select
+            disabled={!draft.institutionId}
+            id="campus"
+            onChange={(e) => updateField("campus", e.target.value)}
+            options={campusOptions}
+            placeholder="Selecciona tu sede"
+            value={draft.campus}
+          />
+        </FormField>
       </div>
-    </aside>
+
+      <label
+        className={cn(
+          "flex min-h-11 cursor-pointer items-start gap-3 rounded-md border border-border bg-surface p-3 text-sm text-text-primary",
+          "focus-within:outline focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-ring",
+        )}
+        htmlFor="acceptTerms"
+      >
+        <input
+          checked={draft.acceptTerms}
+          className="mt-0.5 h-4 w-4 accent-primary"
+          id="acceptTerms"
+          onChange={(e) => updateField("acceptTerms", e.target.checked)}
+          required
+          type="checkbox"
+        />
+        <span>
+          He leído y acepto los{" "}
+          <Link className="font-medium text-primary hover:underline" href="#">
+            Términos y Condiciones
+          </Link>{" "}
+          y la{" "}
+          <Link className="font-medium text-primary hover:underline" href="#">
+            Política de Privacidad
+          </Link>
+          .
+        </span>
+      </label>
+
+      <Button className="w-full" disabled={!canSubmit} type="button">
+        Crear cuenta
+      </Button>
+
+      <p className="text-center text-sm text-text-secondary">
+        ¿Ya tienes cuenta?{" "}
+        <Link className="font-semibold text-primary hover:underline" href="/login">
+          Inicia sesión
+        </Link>
+      </p>
+    </form>
   );
-}
-
-function resetDependentFields<Key extends keyof RegistrationDraft>(
-  draft: RegistrationDraft,
-  field: Key,
-) {
-  if (field !== "institutionId") {
-    return draft;
-  }
-
-  return { ...draft, campus: "", career: "" };
 }
 
 function toOptions(values: string[]) {
-  return values.map((value) => ({ value, label: value }));
+  return values.map((v) => ({ value: v, label: v }));
 }
