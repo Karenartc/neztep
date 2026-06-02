@@ -1,6 +1,5 @@
 import { LANDING_FOOTER_COLUMNS } from "@/components/landing/landing-data";
 import { PrivacyPolicyDialog, TermsDialog } from "@/components/legal/legal-dialogs";
-import { DivideIcon } from "lucide-react";
 import Image from "next/image";
 
 /**
