@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { Mail } from "lucide-react";
 import { PasswordInput } from "@/components/auth/password-input";
 import { SocialButton } from "@/components/auth/social-button";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { validateEmail, validateLoginPassword } from "@/lib/validation/auth";
 
 function GoogleIcon() {
   return (
@@ -43,9 +45,42 @@ function MicrosoftIcon() {
   );
 }
 
+interface LoginDraft {
+  email: string;
+  password: string;
+}
+
+interface LoginTouched {
+  email: boolean;
+  password: boolean;
+}
+
+const INITIAL_DRAFT: LoginDraft = { email: "", password: "" };
+const INITIAL_TOUCHED: LoginTouched = { email: false, password: false };
+const ALL_TOUCHED: LoginTouched = { email: true, password: true };
+
 export function LoginForm() {
+  const [draft, setDraft] = useState<LoginDraft>(INITIAL_DRAFT);
+  const [touched, setTouched] = useState<LoginTouched>(INITIAL_TOUCHED);
+
+  const emailError = touched.email ? validateEmail(draft.email) : undefined;
+  const passwordError = touched.password ? validateLoginPassword(draft.password) : undefined;
+
+  const isValid = !validateEmail(draft.email) && !validateLoginPassword(draft.password);
+
+  function touch(field: keyof LoginTouched) {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setTouched(ALL_TOUCHED);
+    if (!isValid) return;
+    // TODO: call auth API
+  }
+
   return (
-    <form className="space-y-5" onSubmit={(event) => event.preventDefault()}>
+    <form className="space-y-5" onSubmit={handleSubmit}>
       <div className="space-y-3">
         <SocialButton icon={<GoogleIcon />}>Continuar con Google</SocialButton>
         <SocialButton icon={<MicrosoftIcon />}>Continuar con Microsoft</SocialButton>
@@ -55,13 +90,17 @@ export function LoginForm() {
         <span className="text-sm font-medium text-text-secondary">o</span>
         <Separator />
       </div>
-      <FormField id="loginEmail" label="Correo institucional">
+      <FormField error={emailError} id="loginEmail" label="Correo institucional">
         <div className="relative">
           <Input
             className="pe-9"
+            error={Boolean(emailError)}
             id="loginEmail"
+            onBlur={() => touch("email")}
+            onChange={(e) => setDraft((prev) => ({ ...prev, email: e.target.value }))}
             placeholder="tucorreo@institucion.cl"
             type="email"
+            value={draft.email}
           />
           <Mail
             aria-hidden="true"
@@ -69,15 +108,22 @@ export function LoginForm() {
           />
         </div>
       </FormField>
-      <FormField id="loginPassword" label="Contraseña">
-        <PasswordInput id="loginPassword" placeholder="Ingresa tu contraseña" />
+      <FormField error={passwordError} id="loginPassword" label="Contraseña">
+        <PasswordInput
+          error={Boolean(passwordError)}
+          id="loginPassword"
+          onBlur={() => touch("password")}
+          onChange={(e) => setDraft((prev) => ({ ...prev, password: e.target.value }))}
+          placeholder="Ingresa tu contraseña"
+          value={draft.password}
+        />
       </FormField>
       <div className="flex justify-end">
         <Link className="text-sm font-medium text-primary hover:underline" href="#">
           ¿Olvidaste tu contraseña?
         </Link>
       </div>
-      <Button className="w-full" type="button">
+      <Button className="w-full" type="submit">
         Iniciar sesión
       </Button>
       <p className="text-center text-sm text-text-secondary">
