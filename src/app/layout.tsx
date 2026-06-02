@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+// @ts-ignore: CSS module declarations are handled by Next.js
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Neztep Design System",
-  description: "Initial visual foundation for Neztep institutional onboarding.",
+  title: "Neztep",
+  description: "Plataforma SaaS para onboarding univesitario.",
 };
 
 interface RootLayoutProps {
