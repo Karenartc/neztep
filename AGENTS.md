@@ -1,705 +1,436 @@
-````md
-# AGENTS.md — Project Rules for AI Coding Agents
-# This file is read by Antigravity (v1.20.3+), Cursor, Claude Code, Codex, and compatible AI development agents.
-# Rules here apply globally unless tool-specific override files exist.
-
-# =========================================================
-# 1. PROJECT OVERVIEW
-# =========================================================
-
-## Project Identity
-- **Name:** Neztep
-- **Type:** SaaS Web Platform (Higher Education Onboarding & Institutional Integration)
-- **Stage:** MVP / Academic Capstone / Prototype with scalable SaaS architecture
-- **Previous Prototype Reference:** PathFinder (conceptual predecessor only)
-
-## Core Mission
-Neztep is a serious, institutional, SaaS-oriented onboarding platform for higher education institutions designed to improve first-year student integration through centralized guidance, institutional orientation, structured onboarding, FAQ support, and campus navigation.
-
-## Primary Problem Statement
-Neztep exists to solve:
-- fragmented institutional information;
-- lack of structured onboarding;
-- first-year student disorientation;
-- difficulty locating institutional spaces;
-- informal dependency for administrative guidance;
-- unclear access to institutional support.
-
-## Product Positioning
-Neztep is:
-- serious;
-- minimalist;
-- institutional;
-- accessible;
-- SaaS B2B;
-- scalable;
-- multitenant;
-- academically defensible.
-
-Neztep is NOT:
-- a childish gamified app;
-- a mascot-centered product;
-- a competitive ranking platform;
-- a social network;
-- an enterprise overbuilt solution beyond MVP.
-
----
-
-# =========================================================
-# 2. PRODUCT DIFFERENTIATION
-# =========================================================
-
-## PathFinder vs Neztep
-PathFinder:
-- exploratory prototype;
-- gamified;
-- mascot-heavy;
-- visually playful.
-
-Neztep:
-- institutional evolution;
-- SaaS platform;
-- onboarding-first;
-- admin-ready;
-- scalable B2B architecture;
-- serious product design.
-
-### Critical Design Rules
-- Do NOT replicate PathFinder’s childish visual style.
-- Do NOT make mascots central UI components.
-- Do NOT use ranking as a primary engagement mechanism.
-- Do prioritize onboarding, clarity, and institutional trust.
-
----
-
-# =========================================================
-# 3. MVP SCOPE (STRICT)
-# =========================================================
-
-## Included MVP Modules
-1. Authentication
-2. Registration / Login
-3. Institution association
-4. Guided onboarding
-5. Onboarding progress tracking
-6. Institutional information center
-7. Search
-8. FAQ chatbot
-9. Escalation for unresolved questions
-10. Basic campus map
-11. Points of interest
-12. Student dashboard
-13. Admin dashboard
-14. Institutional content management
-15. FAQ management
-16. Campus point management
-
-## Explicitly Out of Scope
-- global rankings;
-- advanced gamification;
-- AI copilots beyond FAQ;
-- predictive analytics;
-- native mobile apps;
-- full SIS integrations;
-- enterprise deployment automation;
-- advanced retention engines;
-- social systems.
-
-If requested functionality exceeds MVP, default to simplified MVP-compatible alternatives.
-
----
-
-# =========================================================
-# 4. PRIMARY USERS
-# =========================================================
-
-## Student
-First-year student requiring:
-- orientation;
-- onboarding;
-- institutional guidance;
-- support access;
-- campus understanding.
-
-## Institutional Admin
-Responsible for:
-- content;
-- FAQ;
-- map points;
-- support oversight.
-
-## Support Staff
-Responsible for:
-- escalated cases;
-- student issue resolution.
-
----
-
-# =========================================================
-# 5. TECH STACK (MANDATORY)
-# =========================================================
-
-- **Language:** TypeScript 5.x (strict mode)
-- **Framework:** Next.js 15 (App Router)
-- **Styling:** Tailwind CSS v4
-- **UI Components:** shadcn/ui
-- **Icons:** Lucide React
-- **Backend:** Next.js API Routes (Backend For Frontend)
-- **Authentication:** Firebase Authentication (future implementation)
-- **Database:** Cloud Firestore (future implementation)
-- **Admin SDK:** Firebase Admin SDK (future implementation)
-- **Hosting:** Vercel
-- **PWA:** Planned, not current branch priority
-- **Testing:** Vitest (current), Playwright (future)
-- **Package Manager:** pnpm
-- **Design:** Figma
-- **Project Management:** Trello
-- **Version Control:** GitHub
-
-## Forbidden Without Explicit Approval
-- Supabase migration
-- PostgreSQL migration
-- Prisma migration
-- Auth.js replacement
-- Monorepo restructuring
-- Major stack rewrites
-
----
-
-# =========================================================
-# 6. ARCHITECTURE RULES
-# =========================================================
-
-## Core Architecture
-- cloud-native;
-- modular monolith;
-- client-server distributed;
-- Backend For Frontend;
-- SaaS multitenant;
-- institution-isolated.
-
-## Layer Model
-1. Client Layer
-2. Presentation Layer (Next.js)
-3. Business Logic Layer (API Routes)
-4. Security Layer (Firebase Auth)
-5. Persistence Layer (Firestore)
-
-## Mandatory Rules
-- Never bypass institutionId isolation
-- Never allow cross-tenant leakage
-- All protected actions must validate:
-  - auth;
-  - role;
-  - institutionId
-- Use modular domain boundaries
-- Shared UI through design system
-- Repository/service abstraction preferred
-- All API responses should follow a shared envelope when practical
-
----
-
-# =========================================================
-# 7. DATA MODEL (MULTITENANT)
-# =========================================================
-
-```txt
-institutions/{institutionId}
-institutions/{institutionId}/users/{userId}
-institutions/{institutionId}/onboardingSteps/{stepId}
-institutions/{institutionId}/users/{userId}/userProgress/{progressId}
-institutions/{institutionId}/institutionalContent/{contentId}
-institutions/{institutionId}/faqChatbot/{faqId}
-institutions/{institutionId}/pointsOfInterest/{pointId}
-institutions/{institutionId}/supportRequests/{requestId}
-institutions/{institutionId}/auditLogs/{logId}
-````
-
-## Critical Rules
-
-* All institutional data MUST be tenant-scoped
-* Never store shared tenant data insecurely
-* Never mix student data across institutions
-
----
-
-# =========================================================
-
-# 8. ROLES
-
-# =========================================================
-
-```ts
-type UserRole = "student" | "admin" | "support";
-```
-
-## student
-
-* onboarding
-* dashboard
-* resources
-* chatbot
-* map
-* support
-
-## admin
-
-* content CRUD
-* FAQ CRUD
-* map CRUD
-* user oversight
-* support oversight
-
-## support
-
-* escalated requests
-
----
-
-# =========================================================
-
-# 9. CODE QUALITY
-
-# =========================================================
-
-* Maximum file length: 300 lines
-* Maximum function length: 30 lines
-* Cyclomatic complexity max: 10
-* No console.log in production
-* Prefer structured logging
-* Prefer named exports
-* Use `interface` for object shapes
-* Use `type` for unions/intersections
-* All exported functions require JSDoc
-* ESLint + Prettier rules are immutable
-* No dead code
-* No duplicated business logic
-* No hardcoded design tokens outside system
-
----
-
-# =========================================================
-
-# 10. UI/UX DESIGN SYSTEM
-
-# =========================================================
-
-## Design Philosophy
-
-Neztep UI must resemble:
-
-* Notion
-* Stripe Dashboard
-* Coursera
-* Linear
-* Canvas LMS
-
-## Must Be
-
-* serious;
-* minimal;
-* institutional;
-* WCAG-conscious;
-* clean;
-* scalable.
-
-## Must Not Be
-
-* childish;
-* mascot-led;
-* visually noisy;
-* overly gamified.
-
-## Design Tokens
-
-### Colors
-
-```ts
-colors: {
-  primary: "#5B3CC4",
-  primaryHover: "#4C2EAD",
-  secondary: "#8B5CF6",
-  accent: "#EDE9FE",
-  background: "#F8FAFC",
-  surface: "#FFFFFF",
-  textPrimary: "#0F172A",
-  textSecondary: "#475569",
-  border: "#E2E8F0",
-  success: "#16A34A",
-  warning: "#D97706",
-  error: "#DC2626",
-  info: "#2563EB"
-}
-```
-
-### Typography
-
-* Inter
-* Geist
-* Manrope
-
-### Spacing
-
-8px system
-
-### Radius
-
-* 8
-* 12
-* 16
-* 24
-
----
-
-# =========================================================
-
-# 11. REQUIRED COMPONENT LIBRARY
-
-# =========================================================
-
-## Current Implemented
-
-* Button
-* Input
-* Card
-* Badge
-* Alert
-* Dialog
-* DropdownMenu
-* FormField
-* ProgressBar
-* Separator
-* Skeleton
-* Table
-* Tabs
-* Avatar
-* Sidebar
-* Navbar
-* EmptyState
-* StatCard
-
-## Future Required
-
-* Select
-* Textarea
-* Checkbox
-* Stepper
-* SearchInput
-* PageHeader
-* SectionHeader
-* DataTable (advanced)
-* Toast system
-
-## Component Rules
-
-All components require:
-
-* variants
-* hover
-* focus
-* disabled
-* error
-* accessibility compliance
-
----
-
-# =========================================================
-
-# 12. ACCESSIBILITY (NON-NEGOTIABLE)
-
-# =========================================================
-
-Minimum: WCAG 2.1 AA
-
-## Requirements
-
-* visible labels
-* keyboard navigation
-* focus states
-* semantic HTML
-* sufficient contrast
-* descriptive error states
-* minimum touch targets
-* no color-only communication
-
----
-
-# =========================================================
-
-# 13. ROUTING STRUCTURE
-
-# =========================================================
-
-## Current Implemented
+# AGENTS.md - Project Rules for AI Coding Agents
+
+Estas reglas aplican a todo `d:\neztep`. El objetivo es que cualquier agente trabaje sobre el estado real del repositorio, no sobre supuestos.
+
+## 1. Identidad del proyecto
+
+### Nombre y enfoque
+
+- Nombre: `Neztep`
+- Tipo: SaaS web para onboarding institucional en educacion superior
+- Etapa: MVP / capstone / prototipo con arquitectura escalable
+- Posicionamiento: serio, institucional, minimalista, accesible y SaaS B2B
+
+### Problema que resuelve
+
+- informacion institucional fragmentada;
+- onboarding poco estructurado;
+- desorientacion del estudiante de primer año;
+- dificultad para ubicar espacios y recursos;
+- dependencia de canales informales para soporte.
+
+### No convertir el producto en
+
+- app infantil o mascot-first;
+- sistema de rankings;
+- red social;
+- plataforma sobreingenierizada fuera de alcance MVP.
+
+## 2. Estado real de implementacion
+
+Actualmente el repositorio SI implementa:
+
+- App Router con route groups `(public)`, `(app)` y `(admin)`;
+- landing page publica;
+- paginas `login` y `register`;
+- shell de estudiante con navegacion lateral;
+- shell admin con navegacion lateral;
+- pagina `/design-system`;
+- componentes `auth`, `landing`, `layout`, `legal`, `student` y `ui`;
+- features `auth`, `onboarding`, `resources`, `campus`, `chatbot` y `admin`;
+- BFF stubs en `src/app/api`;
+- validaciones de formularios en cliente;
+- tests unitarios, de componentes y E2E basicos.
+
+Actualmente el repositorio NO implementa:
+
+- Firebase Authentication;
+- Firebase Admin SDK;
+- Cloud Firestore;
+- sesiones reales;
+- autorizacion por rol e `institutionId`;
+- persistencia multitenant;
+- CRUD reales para admin;
+- chatbot funcional;
+- integraciones externas de backend.
+
+No documentes ni implementes esas capacidades como si ya existieran.
+
+## 3. MVP y prioridad funcional
+
+### Modulos objetivo del MVP
+
+1. autenticacion;
+2. registro / login;
+3. asociacion a institucion;
+4. onboarding guiado;
+5. seguimiento de progreso;
+6. centro de informacion institucional;
+7. busqueda;
+8. FAQ chatbot;
+9. escalamiento a soporte;
+10. mapa basico del campus;
+11. puntos de interes;
+12. dashboard estudiante;
+13. dashboard admin.
+
+### Fuera de alcance sin aprobacion explicita
+
+- rankings;
+- gamificacion avanzada;
+- copilotos AI fuera del FAQ/chatbot institucional;
+- analytics predictivo;
+- apps nativas;
+- migraciones a Supabase, Prisma o PostgreSQL;
+- reestructuras grandes del stack.
+
+Si una solicitud excede el MVP, reducirla a una alternativa compatible con el alcance actual.
+
+## 4. Stack obligatorio
+
+- TypeScript 5 en modo estricto
+- Next.js 15 App Router
+- React 19
+- Tailwind CSS v4
+- shadcn/ui + Radix UI
+- Lucide React
+- pnpm
+- ESLint
+- Vitest
+- Playwright
+
+### Integraciones futuras ya previstas
+
+- Firebase Authentication
+- Firebase Admin SDK
+- Cloud Firestore
+- Hosting en Vercel
+
+Esas integraciones son futuras. No agregarlas ni migrarlas sin requerimiento explicito.
+
+## 5. Arquitectura actual
+
+### Flujo arquitectonico canonico
+
+`Frontend -> Features -> Services -> BFF (src/app/api) -> Firebase Admin SDK (futuro) -> Firestore (futuro)`
+
+### Significado practico
+
+- La UI renderiza paginas y componentes.
+- La logica por dominio vive en `src/features/*`.
+- Los `services` de cada feature son el unico lugar permitido para hablar con la BFF.
+- La BFF actual vive en `src/app/api/*`.
+- Firebase y Firestore no existen todavia en el repo.
+
+### Restriccion critica
+
+No conectes componentes o hooks directamente a Firebase o Firestore desde cliente. Cuando llegue esa integracion, debe entrar por la BFF.
+
+## 6. App Router, rutas y layouts
+
+### Route groups existentes
+
+- `src/app/(public)`
+- `src/app/(app)`
+- `src/app/(admin)`
+
+Los route groups no forman parte de la URL.
+
+### Layouts implementados
+
+- `src/app/layout.tsx`: shell global, fuentes Geist, `globals.css`
+- `src/app/(public)/layout.tsx`: passthrough
+- `src/app/(app)/layout.tsx`: shell estudiante con `AppNav`
+- `src/app/(admin)/layout.tsx`: shell admin con `AdminNav`
+
+### Rutas existentes
 
 ```txt
 /
-/design-system
-```
-
-## Planned Public
-
-```txt
 /login
 /register
-```
-
-## Planned Student
-
-```txt
-/app
-/app/onboarding
-/app/resources
-/app/campus
-/app/chatbot
-/app/profile
-/app/support
-```
-
-## Planned Admin
-
-```txt
+/design-system
+/dashboard
+/onboarding
+/resources
+/campus
+/chatbot
+/profile
 /admin
 /admin/content
-/admin/faq
-/admin/map
-/admin/support-requests
-/admin/users
+/admin/analytics
 ```
 
----
+### Regla de App Router
 
-# =========================================================
+- Cada `page.tsx` debe ser composicion de vista.
+- La logica reusable debe salir a `components`, `features`, `lib` o `hooks`.
+- Si una pagina crece, dividirla antes de que se vuelva un archivo monolitico.
 
-# 14. CURRENT IMPLEMENTATION STATUS
+## 7. Organizacion de carpetas
 
-# =========================================================
-
-## Current Branch Status
-
-The current branch implements the Neztep Design System foundation only.
-
-### Implemented:
-
-* Next.js App Router scaffold
-* `/`
-* `/design-system`
-* CSS variable token system
-* Light/Dark preview foundation (local preview, no persistence)
-* Tailwind v4 design tokens
-* Reusable UI component system
-* Navbar / Sidebar
-* Card spacing system
-* Dialog / Dropdown
-* Typography and spacing showcase
-* Mock data
-* Vitest basic unit test
-* ESLint validation
-* Modularized design-system showcase architecture
-
-### Current Design System Structure
+La estructura actual valida es:
 
 ```txt
-src/components/ui
-src/components/layout
-src/components/student
-src/components/design-system
+src/
+  app/
+    (admin)/
+    (app)/
+    (public)/
+    api/
+    design-system/
+  components/
+    auth/
+    design-system/
+    landing/
+    layout/
+    legal/
+    student/
+    ui/
+  features/
+    admin/
+    auth/
+    campus/
+    chatbot/
+    onboarding/
+    resources/
+  hooks/
+  lib/
+    mock/
+    validation/
+  tests/
+  types/
+tests/
+  e2e/
 ```
 
-### Design System Rule
+### Reglas de organizacion
 
-`src/app/design-system/page.tsx` must remain a composition shell only.
-Large showcase sections must be split into modular components.
+- `src/app`: routing, layouts y entry points de BFF.
+- `src/components`: UI y presentacion reutilizable.
+- `src/features`: dominio por feature.
+- `src/hooks`: hooks compartidos cross-feature.
+- `src/lib`: utilidades, mocks y validaciones agnosticas.
+- `src/types`: tipos compartidos globales.
+- `tests/e2e`: Playwright.
 
-### Not Yet Implemented
+No mover dominio de negocio a `components`.
 
-* Firebase Authentication
-* Firestore
-* API routes
-* Protected routes
-* `/login`
-* `/register`
-* `/app/*`
-* `/admin/*`
-* Real dashboards
-* PWA
-* Deployment
-* Multitenant runtime theming
+## 8. Convenciones de imports
 
-### Theme Architecture
+- Usar alias `@/` para imports internos (`tsconfig.json`).
+- Preferir imports absolutos dentro de `src`.
+- Mantener imports relativos cortos solo dentro de la misma feature cuando agregan claridad.
+- No cruzar capas con imports arbitrarios.
 
-* CSS variables support future institution theming
-* Default Neztep palette active
-* No tenant runtime switching yet
+### Reglas de capa
 
-### Testing
+- `app/*` puede importar `components`, `features`, `lib`, `types`.
+- `components/*` puede importar `components/ui`, `lib`, `types` y hooks estrictamente necesarios.
+- `features/*/hooks` puede importar `features/*/services` y `features/*/types`.
+- `features/*/services` puede importar solo `features/*/types` y utilidades neutrales.
+- `features/*/types` no debe depender de UI.
 
-* Vitest configured
-* Basic utility test only
-* Playwright and E2E pending
+## 9. Convenciones para features
 
----
-
-# =========================================================
-
-# 15. TESTING REQUIREMENTS
-
-# =========================================================
-
-## Current
-
-* `pnpm test` (Vitest basic)
-* utility-level validation
-
-## Future Mandatory
-
-* Unit tests for utilities
-* Integration tests for API routes
-* E2E for user-facing flows
-* Minimum 80% coverage on new code
-
----
-
-# =========================================================
-
-# 16. SAFETY GUARDRAILS (CRITICAL)
-
-# =========================================================
-
-* Never write to DB without explicit user confirmation
-* Never deploy without approval
-* Never delete files without approval
-* Never expose secrets
-* Never commit .env files
-* Never hardcode credentials
-* Validate all input
-* Wrap external calls in try/catch
-* Protect admin paths
-* Respect tenant isolation
-
----
-
-# =========================================================
-
-# 17. GIT CONVENTIONS
-
-# =========================================================
-
-* Conventional commits only:
-
-  * feat:
-  * fix:
-  * docs:
-  * refactor:
-  * test:
-  * chore:
-
-* PR titles < 72 chars
-
-* Prefer < 400 LOC diff
-
-* No force push to main/master
-
----
-
-# =========================================================
-
-# 18. PROJECT STRUCTURE
-
-# =========================================================
+Cada feature debe seguir esta forma:
 
 ```txt
-/src
-  /app
-  /components
-    /ui
-    /layout
-    /student
-    /design-system
-    /admin (future)
-  /lib
-    /firebase (future)
-    /mock
-    /utils
-    /validators (future)
-  /types
-  /styles
+src/features/<feature>/
+  hooks/
+  services/
+  types/
+  index.ts
 ```
 
----
+### Reglas para features
 
-# =========================================================
+- `index.ts` exporta solo tipos seguros para server y client.
+- Los hooks deben ser `client-only` si usan estado o efectos.
+- Los services describen y encapsulan el contrato con BFF.
+- No hacer `fetch` desde `page.tsx` si el dominio ya tiene `service`.
+- No duplicar tipos entre features si pertenecen claramente al mismo dominio.
 
-# 19. MOCK DATA RULES
+### Features existentes hoy
 
-# =========================================================
+- `auth`
+- `onboarding`
+- `resources`
+- `campus`
+- `chatbot`
+- `admin`
 
-Location:
+## 10. Convenciones para API Routes
 
-```txt
-/src/lib/mock
-```
+### Estado actual
 
-## Rules
+`src/app/api` contiene endpoints stub:
 
-* No lorem ipsum
-* Use realistic university content
-* Match real schemas
-* Keep institution scoped
+- `auth`
+- `onboarding`
+- `resources`
+- `campus`
+- `chatbot`
+- `admin`
 
----
+### Reglas obligatorias
 
-# =========================================================
+- Tratar `src/app/api` como capa BFF, no como backend generico.
+- Toda validacion de auth, role e `institutionId` debe vivir aqui cuando exista backend real.
+- La capa `features/*` nunca debe validar permisos como sustituto del servidor.
+- Responder con contratos consistentes y explicitamente tenant-scoped.
+- Mientras sigan siendo stubs, mantener mensajes `Not implemented` claros y no fingir persistencia.
 
-# 20. COMMUNICATION RULES
+### Direccion futura obligatoria
 
-# =========================================================
+- `auth` -> Firebase Auth / cookies de sesion
+- `onboarding` -> progreso en Firestore
+- `resources` -> recursos por institucion
+- `campus` -> edificios y POI por institucion
+- `chatbot` -> historial y mensajes + proveedor AI
+- `admin` -> contenido y metricas con rol admin validado en servidor
 
-* Be concise
-* Explain why
-* Flag bugs immediately
-* Prefer simplest valid solution
-* Ask when uncertain
-* Do not guess
-* Do not overengineer
+## 11. Convenciones para componentes
 
----
+### Categorias reales
 
-# =========================================================
+- `components/ui`: primitives y wrappers reutilizables
+- `components/layout`: navegacion y shell blocks
+- `components/auth`: formularios y piezas de autenticacion
+- `components/landing`: bloques de marketing publico
+- `components/design-system`: showcases y documentacion visual
+- `components/legal`: dialogos legales
+- `components/student`: bloques especificos de experiencia estudiante
 
-# 21. CURRENT PRIORITY
+### Reglas
 
-# =========================================================
+- Mantener componentes pequenos y composables.
+- Si un componente representa un patron transversal, ubicarlo en `components`.
+- Si representa logica de dominio, evaluar moverlo a una feature o dejar la logica fuera del componente.
+- Respetar accesibilidad: labels visibles, foco, estados disabled y mensajes de error.
+- No hardcodear design tokens fuera del sistema de variables / Tailwind / componentes base.
 
-1. README / Documentation
-2. Layout Foundation
-3. Public Pages (Login/Register)
-4. Student Dashboard Shell
-5. Admin Dashboard Shell
-6. Guided Onboarding UI
-7. Firebase/Auth Integration
-8. PWA
+## 12. Convenciones para hooks
 
----
+### Hooks compartidos
 
-# =========================================================
+- Van en `src/hooks`.
+- Hoy existe `useInstitution` como placeholder cross-feature.
 
-# 22. DEFINITION OF DONE
+### Hooks por feature
 
-# =========================================================
+- Van en `src/features/<feature>/hooks`.
+- Deben orquestar estado de UI y uso de `services`.
+- No deben contener detalles de infraestructura Firebase.
 
-A task is complete only if:
+### Regla
 
-* builds successfully;
-* respects AGENTS.md;
-* respects MVP scope;
-* is responsive;
-* is accessible;
-* is tested;
-* preserves security;
-* maintains institutional seriousness;
-* supports academic defense;
-* does not create unnecessary technical debt.
+Si un hook solo aplica a una feature, no subirlo a `src/hooks`.
 
-```
-```
+## 13. Convenciones para types
+
+- Usar `interface` para object shapes.
+- Usar `type` para unions e intersecciones.
+- Tipos de dominio van dentro de su feature.
+- Tipos compartidos entre modulos van en `src/types`.
+- Evitar tipos duplicados o ambiguos entre `components` y `features`.
+
+## 14. Convenciones para tests
+
+### Estado actual
+
+- Vitest configurado con `jsdom`
+- Testing Library configurado en `src/tests/setupTests.ts`
+- Playwright configurado en `tests/e2e`
+
+### Archivos de prueba existentes
+
+- `src/lib/utils.test.ts`
+- `src/lib/validation/auth.test.ts`
+- `src/components/auth/login-form.test.tsx`
+- `src/components/auth/register-form.test.tsx`
+- `tests/e2e/public.spec.ts`
+
+### Reglas
+
+- Tests unitarios o de componentes junto al codigo en `src/**/*.test.ts(x)`.
+- E2E solo en `tests/e2e`.
+- Nuevas validaciones de formularios deben cubrir casos validos e invalidos.
+- Nuevas paginas publicas o shells importantes deben sumar al menos smoke coverage cuando tenga sentido.
+
+## 15. Convenciones para Firebase futuro
+
+Cuando se implemente Firebase:
+
+- `src/lib/firebase` sera la ubicacion esperada para inicializacion compartida.
+- El SDK Admin debe usarse solo en servidor/BFF.
+- El cliente no debe usar credenciales administrativas.
+- La sesion debe resolverse via BFF y cookies/headers seguros.
+- Firestore debe respetar aislamiento por `institutionId` en toda lectura y escritura.
+
+No adelantar integraciones parciales que rompan esta direccion.
+
+## 16. Restricciones arquitectonicas
+
+- Nunca bypass de `institutionId`.
+- Nunca leakage cross-tenant.
+- Nunca acceso directo desde UI a Firestore.
+- Nunca almacenar secretos en cliente.
+- Nunca escribir "mock" como si fuera dato real.
+- No documentar features como implementadas si solo existen como shell o stub.
+- Mantener separacion entre presentacion y dominio.
+- Preferir cambios pequenos y consistentes con la estructura actual.
+
+## 17. UI/UX y design system
+
+### Direccion visual
+
+- seria
+- institucional
+- minimalista
+- accesible
+- escalable
+
+### Referencias de tono
+
+- Notion
+- Stripe Dashboard
+- Coursera
+- Linear
+- Canvas LMS
+
+### Evitar
+
+- estetica infantil
+- interfaces ruidosas
+- gamificacion dominante
+- componentes "mascota"
+
+## 18. Safety guardrails
+
+- Nunca desplegar sin aprobacion.
+- Nunca borrar archivos sin aprobacion.
+- Nunca commitear `.env`.
+- Nunca hardcodear credenciales.
+- Validar inputs de usuario.
+- Encapsular integraciones externas con manejo de error cuando existan.
+- Proteger futuras rutas admin desde servidor.
+
+## 19. Git y cambios
+
+- Conventional commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
+- Preferir diffs pequenos y focalizados.
+- No force push a `main` o `master`.
+- Si README o AGENTS quedan desalineados del codigo, corregirlos.
+
+## 20. Definicion de done
+
+Una tarea esta completa solo si:
+
+- refleja el estado real del codigo;
+- respeta esta arquitectura;
+- mantiene accesibilidad y tono institucional;
+- no inventa backend inexistente;
+- preserva seguridad y direccion multitenant;
+- incluye tests cuando el cambio funcional lo requiera;
+- no introduce deuda tecnica innecesaria.
