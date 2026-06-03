@@ -3,7 +3,7 @@ import { AuthShell } from "@/components/auth/auth-shell";
 import { RegisterForm } from "@/components/auth/register-form";
 
 export const metadata: Metadata = {
-  title: "Registro",
+  title: "Registro | Neztep",
   description: "Crea tu cuenta institucional.",
 };
 
