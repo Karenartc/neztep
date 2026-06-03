@@ -41,7 +41,7 @@ export const LANDING_FEATURES: LandingFeature[] = [
     icon: Route,
     title: "Onboarding inteligente",
     description:
-      "Rutas para cada estudiante desde el primer dí. Cada paso, en su momento.",
+      "Rutas para cada estudiante desde el primer día. Cada paso, en su momento.",
   },
   {
     icon: MapPin,

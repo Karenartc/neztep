@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Neztep",
-  description: "Plataforma SaaS para onboarding univesitario.",
+  description: "Plataforma SaaS para onboarding universitario.",
 };
 
 interface RootLayoutProps {
@@ -26,7 +26,7 @@ interface RootLayoutProps {
  */
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="es" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>{children}</body>
     </html>
   );
