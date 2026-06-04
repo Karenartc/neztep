@@ -7,11 +7,9 @@ export const metadata: Metadata = {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen gap-4 bg-background p-4">
-      <div className="hidden w-56 shrink-0 md:block">
-        <AppNav />
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-4">
+    <div className="flex min-h-screen bg-background">
+      <AppNav />
+      <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-14 md:pt-4">
         {children}
       </div>
     </div>

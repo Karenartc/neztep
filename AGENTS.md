@@ -152,7 +152,10 @@ Los route groups no forman parte de la URL.
 /design-system
 /dashboard
 /onboarding
+/mi-ruta
 /resources
+/services
+/faq
 /campus
 /chatbot
 /profile

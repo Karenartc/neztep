@@ -1,19 +1,37 @@
 import type { Metadata } from "next";
-import { LayoutDashboard } from "lucide-react";
-import { Navbar } from "@/components/layout/navbar";
-import { EmptyState } from "@/components/layout/empty-state";
+import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
+import { ProgressSummaryCard } from "@/features/dashboard/components/ProgressSummaryCard";
+import { UpcomingEventsCard } from "@/features/dashboard/components/UpcomingEventsCard";
+import { QuickActionsGrid } from "@/features/dashboard/components/QuickActionsGrid";
+import { CampusPreviewGrid } from "@/features/dashboard/components/CampusPreviewGrid";
+import { RecommendedSection } from "@/features/dashboard/components/RecommendedSection";
+import {
+  mockCampusPoints,
+  mockQuickActions,
+  mockRecommendedItems,
+  mockStudent,
+  mockUpcomingEvents,
+} from "@/features/dashboard/data/dashboard-mock";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 export default function DashboardPage() {
   return (
-    <>
-      <Navbar title="Dashboard" subtitle="Resumen de tu actividad universitaria" />
-      <EmptyState
-        icon={LayoutDashboard}
-        title="Tu dashboard"
-        description="Aquí verás un resumen de tu progreso, notificaciones y accesos rápidos."
-      />
-    </>
+    <main className="flex flex-col gap-4">
+      <DashboardHeader />
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <ProgressSummaryCard student={mockStudent} />
+        </div>
+        <UpcomingEventsCard events={mockUpcomingEvents.slice(0, 2)} />
+      </div>
+
+      <QuickActionsGrid actions={mockQuickActions} />
+
+      <CampusPreviewGrid points={mockCampusPoints} />
+
+      <RecommendedSection items={mockRecommendedItems} />
+    </main>
   );
 }
