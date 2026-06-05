@@ -1,3 +1,4 @@
+// Pantalla fuera del alcance del MVP actual.
 import type { Metadata } from "next";
 import { HelpCircle } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";

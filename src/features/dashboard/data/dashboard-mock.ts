@@ -3,7 +3,6 @@ import {
   Building2,
   GraduationCap,
   Heart,
-  HelpCircle,
   Library,
   ListTodo,
   Monitor,
@@ -11,6 +10,7 @@ import {
 } from "lucide-react";
 import type {
   CampusPoint,
+  PendingTask,
   QuickAction,
   RecommendedItem,
   StudentDashboardSummary,
@@ -29,11 +29,11 @@ export const mockStudent: StudentDashboardSummary = {
   nextStep: {
     id: "step-5",
     stepNumber: 5,
-    title: "Completar servicios estudiantiles",
+    title: "Explora el Centro de información",
     description:
-      "Conoce los servicios de apoyo académico, psicológico y deportivo disponibles para ti.",
+      "Conoce los recursos de apoyo académico, psicológico y deportivo disponibles para ti.",
     estimatedMinutes: 5,
-    href: "/services",
+    href: "/resources",
   },
 };
 
@@ -63,10 +63,10 @@ export const mockQuickActions: QuickAction[] = [
   },
   {
     id: "qa-4",
-    label: "FAQ",
-    description: "Respuestas rápidas",
-    href: "/faq",
-    icon: HelpCircle,
+    label: "Centro de info",
+    description: "Recursos y trámites",
+    href: "/resources",
+    icon: Library,
   },
 ];
 
@@ -99,7 +99,7 @@ export const mockUpcomingEvents: UpcomingEvent[] = [
     category: "announcement",
     eventType: "Taller",
     status: "upcoming",
-    href: "/services",
+    href: "/resources",
   },
 ];
 
@@ -135,6 +135,33 @@ export const mockCampusPoints: CampusPoint[] = [
     category: "academic",
     building: "C",
     icon: Monitor,
+  },
+];
+
+export const mockPendingTasks: PendingTask[] = [
+  {
+    id: "task-1",
+    title: "Completar formulario de matrícula",
+    category: "Académico",
+    priority: "high",
+    status: "in_progress",
+    href: "/onboarding",
+  },
+  {
+    id: "task-2",
+    title: "Activar correo institucional",
+    category: "Administrativo",
+    priority: "high",
+    status: "pending",
+    href: "/onboarding",
+  },
+  {
+    id: "task-3",
+    title: "Revisar reglamento estudiantil",
+    category: "Onboarding",
+    priority: "medium",
+    status: "pending",
+    href: "/resources",
   },
 ];
 

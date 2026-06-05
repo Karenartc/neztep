@@ -10,7 +10,7 @@ export function ProgressSummaryCard({ student }: ProgressSummaryCardProps) {
   const { progressPercent, completedSteps, totalSteps } = student;
 
   return (
-    <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary to-secondary p-6 text-primary-foreground shadow-card">
+    <div className="relative h-full overflow-hidden rounded-lg bg-gradient-to-br from-primary to-secondary p-6 text-primary-foreground shadow-card">
       <p className="text-sm font-medium opacity-90">Tu progreso de integración</p>
 
       <div className="mt-3 flex items-end justify-between gap-4">
