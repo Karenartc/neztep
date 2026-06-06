@@ -7,13 +7,10 @@ import {
   Bell,
   BookOpen,
   Bot,
-  Briefcase,
   GraduationCap,
-  HelpCircle,
   Home,
   MapPin,
   Menu,
-  Route,
 } from "lucide-react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Avatar } from "@/components/ui/avatar";
@@ -23,11 +20,8 @@ import type { NavigationItem } from "@/types/design-system";
 const APP_NAV: NavigationItem[] = [
   { label: "Inicio", href: "/dashboard", icon: Home },
   { label: "Onboarding", href: "/onboarding", icon: GraduationCap },
-  { label: "Mi Ruta", href: "/mi-ruta", icon: Route },
   { label: "Campus", href: "/campus", icon: MapPin },
   { label: "Centro de información", href: "/resources", icon: BookOpen },
-  { label: "Servicios", href: "/services", icon: Briefcase },
-  { label: "FAQ", href: "/faq", icon: HelpCircle },
   { label: "NezBot", href: "/chatbot", icon: Bot },
 ];
 

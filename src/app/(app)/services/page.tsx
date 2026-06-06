@@ -1,3 +1,4 @@
+// Pantalla fuera del alcance del MVP actual.
 import type { Metadata } from "next";
 import { Briefcase } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";

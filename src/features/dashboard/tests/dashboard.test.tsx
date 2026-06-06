@@ -89,7 +89,7 @@ describe("NextStepCard", () => {
   it("renders the Continuar CTA link", () => {
     render(<NextStepCard step={step} totalSteps={mockStudent.totalSteps} />);
     const link = screen.getByRole("link", { name: /Continuar/i });
-    expect(link).toHaveAttribute("href", "/services");
+    expect(link).toHaveAttribute("href", "/resources");
   });
 });
 
@@ -101,7 +101,7 @@ describe("QuickActionsGrid", () => {
     expect(screen.getByText("Mis tareas")).toBeInTheDocument();
     expect(screen.getByText("Onboarding")).toBeInTheDocument();
     expect(screen.getByText("NezBot")).toBeInTheDocument();
-    expect(screen.getByText("FAQ")).toBeInTheDocument();
+    expect(screen.getByText("Centro de info")).toBeInTheDocument();
   });
 
   it("renders the section heading", () => {
@@ -114,7 +114,7 @@ describe("QuickActionsGrid", () => {
   it("renders action descriptions", () => {
     render(<QuickActionsGrid actions={mockQuickActions} />);
     expect(screen.getByText("Pregúntale algo")).toBeInTheDocument();
-    expect(screen.getByText("Respuestas rápidas")).toBeInTheDocument();
+    expect(screen.getByText("Recursos y trámites")).toBeInTheDocument();
   });
 
   it("renders the badge count for highlighted actions", () => {
