@@ -1,17 +1,26 @@
-import * as admin from 'firebase-admin';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
 
-// Validamos que Firebase no se haya inicializado ya (evita errores en Next.js al recargar la página)
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
+// Lavamos la llave privada
+const getPrivateKey = () => {
+  const key = process.env.FIREBASE_PRIVATE_KEY;
+  if (!key) return undefined;
+  return key.replace(/\\n/g, '\n').replace(/"/g, '');
+};
+
+// Validamos usando la función modular getApps()
+if (!getApps().length) {
+  initializeApp({
+    credential: cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      // Reemplazamos los caracteres '\n' literales por saltos de línea reales para que el certificado funcione
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    }),
+      privateKey: getPrivateKey(),
+    })
   });
+  console.log("🔥 Firebase Admin inicializado con éxito");
 }
 
-// Exportamos la base de datos (Firestore) y Auth para usarlas en las rutas API
-export const db = admin.firestore();
-export const auth = admin.auth();
+// Exportamos los servicios directamente
+export const db = getFirestore();
+export const auth = getAuth();

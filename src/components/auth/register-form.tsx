@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Mail } from "lucide-react";
 import { PasswordInput } from "@/components/auth/password-input";
@@ -69,9 +70,10 @@ const ALL_TOUCHED: TouchedFields = {
 };
 
 export function RegisterForm() {
+  const router = useRouter();
   const [draft, setDraft] = useState<RegistrationDraft>(INITIAL_DRAFT);
   const [touched, setTouched] = useState<TouchedFields>(INITIAL_TOUCHED);
-
+  
   const selectedInstitution = institutions.find(
     (inst) => inst.institutionId === draft.institutionId,
   );
@@ -125,12 +127,53 @@ export function RegisterForm() {
     });
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setTouched(ALL_TOUCHED);
-    if (!canSubmit) return;
-    // TODO: call registration API
+// DESPUÉS — agrega estos dos estados arriba de la función handleSubmit:
+const [isLoading, setIsLoading] = useState(false);
+const [serverError, setServerError] = useState<string | null>(null);
+
+// Y reemplaza handleSubmit completo:
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  setTouched(ALL_TOUCHED);
+  if (!canSubmit) return;
+
+  setIsLoading(true);
+  setServerError(null);
+
+  try {
+    // Llamamos al backend que creamos en el Archivo 1
+    // Usamos los mismos nombres de campo que ya tiene tu formulario
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fullName: draft.fullName,
+        email: draft.email,
+        password: draft.password,
+        institutionId: draft.institutionId,
+        career: draft.career,
+        campus: draft.campus,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // El servidor rechazó el registro (ej: email ya existe)
+      setServerError(data.message);
+      return;
+    }
+
+    // Todo salió bien: redirigimos al login
+    // Importa useRouter de next/navigation al inicio del archivo
+    router.push("/login?registered=true");
+
+  } catch {
+    setServerError("Error de conexión. Intenta nuevamente.");
+  } finally {
+    setIsLoading(false);
   }
+}
 
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
@@ -263,8 +306,11 @@ export function RegisterForm() {
         </span>
       </label>
 
-      <Button className="w-full" disabled={!canSubmit} type="submit">
-        Crear cuenta
+      {serverError && (
+        <p className="text-sm text-destructive">{serverError}</p>
+      )}
+      <Button className="w-full" disabled={!canSubmit || isLoading} type="submit">
+      {isLoading ? "Creando cuenta..." : "Crear cuenta"}
       </Button>
 
       <p className="text-center text-sm text-text-secondary">

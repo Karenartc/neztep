@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Mail } from "lucide-react";
 import { PasswordInput } from "@/components/auth/password-input";
@@ -10,6 +11,10 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { validateEmail, validateLoginPassword } from "@/lib/validation/auth";
+
+// Importaciones de Firebase
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebaseClient";
 
 function GoogleIcon() {
   return (
@@ -60,8 +65,13 @@ const INITIAL_TOUCHED: LoginTouched = { email: false, password: false };
 const ALL_TOUCHED: LoginTouched = { email: true, password: true };
 
 export function LoginForm() {
+  const router = useRouter();
   const [draft, setDraft] = useState<LoginDraft>(INITIAL_DRAFT);
   const [touched, setTouched] = useState<LoginTouched>(INITIAL_TOUCHED);
+  
+  // Nuevos estados para manejar la carga y los errores
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const emailError = touched.email ? validateEmail(draft.email) : undefined;
   const passwordError = touched.password ? validateLoginPassword(draft.password) : undefined;
@@ -72,11 +82,32 @@ export function LoginForm() {
     setTouched((prev) => ({ ...prev, [field]: true }));
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setTouched(ALL_TOUCHED);
     if (!isValid) return;
-    // TODO: call auth API
+
+    setIsLoading(true);
+    setServerError(null);
+
+    try {
+      // Iniciar sesión con Firebase Client
+      await signInWithEmailAndPassword(auth, draft.email, draft.password);
+      
+      // Si el login es exitoso, redirigimos a la página principal del estudiante
+      router.push("/dashboard"); 
+    } catch (error: any) {
+      console.error("Error al iniciar sesión:", error);
+      
+      // Mostramos un error amigable si se equivocan en la clave o correo
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        setServerError("El correo o la contraseña son incorrectos.");
+      } else {
+        setServerError("Ocurrió un error al conectar. Intenta nuevamente.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -123,8 +154,14 @@ export function LoginForm() {
           ¿Olvidaste tu contraseña?
         </Link>
       </div>
-      <Button className="w-full" type="submit">
-        Iniciar sesión
+      
+      {/* Mensaje de error del servidor */}
+      {serverError && (
+        <p className="text-sm font-medium text-destructive">{serverError}</p>
+      )}
+
+      <Button className="w-full" type="submit" disabled={isLoading || !isValid}>
+        {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
       </Button>
       <p className="text-center text-sm text-text-secondary">
         ¿No tienes cuenta?{" "}
