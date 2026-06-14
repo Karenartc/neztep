@@ -15,6 +15,7 @@ import { validateEmail, validateLoginPassword } from "@/lib/validation/auth";
 // Importaciones de Firebase
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
+import { authClient } from "@/features/auth/services/auth-client";
 
 function GoogleIcon() {
   return (
@@ -91,16 +92,26 @@ export function LoginForm() {
     setServerError(null);
 
     try {
-      // Iniciar sesión con Firebase Client
-      await signInWithEmailAndPassword(auth, draft.email, draft.password);
-      
-      // Si el login es exitoso, redirigimos a la página principal del estudiante
-      router.push("/dashboard"); 
-    } catch (error: any) {
-      console.error("Error al iniciar sesión:", error);
-      
-      // Mostramos un error amigable si se equivocan en la clave o correo
-      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+      const userCredential = await signInWithEmailAndPassword(auth, draft.email, draft.password);
+
+      // Crear cookie de sesión segura en el servidor
+      const idToken = await userCredential.user.getIdToken();
+      const sessionResult = await authClient.createSession(idToken);
+      if (!sessionResult.ok) {
+        console.error("[login] No se pudo crear cookie de sesión:", sessionResult.error);
+      }
+
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        'code' in error &&
+        (
+          (error as { code: string }).code === 'auth/invalid-credential' ||
+          (error as { code: string }).code === 'auth/user-not-found' ||
+          (error as { code: string }).code === 'auth/wrong-password'
+        )
+      ) {
         setServerError("El correo o la contraseña son incorrectos.");
       } else {
         setServerError("Ocurrió un error al conectar. Intenta nuevamente.");
@@ -113,8 +124,8 @@ export function LoginForm() {
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
       <div className="space-y-3">
-        <SocialButton icon={<GoogleIcon />}>Continuar con Google</SocialButton>
-        <SocialButton icon={<MicrosoftIcon />}>Continuar con Microsoft</SocialButton>
+        <SocialButton disabled icon={<GoogleIcon />}>Continuar con Google</SocialButton>
+        <SocialButton disabled icon={<MicrosoftIcon />}>Continuar con Microsoft</SocialButton>
       </div>
       <div className="flex items-center gap-4">
         <Separator />

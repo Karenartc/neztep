@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail } from "lucide-react";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { PrivacyPolicyDialog, TermsDialog } from "@/components/legal/legal-dialogs";
-import { institutions } from "@/lib/mock/institutions";
 import {
   validateEmail,
   validateFullName,
@@ -69,20 +68,61 @@ const ALL_TOUCHED: TouchedFields = {
   campus: true,
 };
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
 export function RegisterForm() {
   const router = useRouter();
   const [draft, setDraft] = useState<RegistrationDraft>(INITIAL_DRAFT);
   const [touched, setTouched] = useState<TouchedFields>(INITIAL_TOUCHED);
-  
-  const selectedInstitution = institutions.find(
-    (inst) => inst.institutionId === draft.institutionId,
-  );
-  const campusOptions = toOptions(selectedInstitution?.campuses ?? []);
-  const careerOptions = toOptions(selectedInstitution?.careers ?? []);
-  const institutionOptions = institutions.map((inst) => ({
-    value: inst.institutionId,
-    label: inst.name,
-  }));
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const [institutionOptions, setInstitutionOptions] = useState<SelectOption[]>([]);
+  const [careerOptions, setCareerOptions] = useState<SelectOption[]>([]);
+  const [campusOptions, setCampusOptions] = useState<SelectOption[]>([]);
+
+  useEffect(() => {
+    fetch("/api/institutions")
+      .then((r) => r.json())
+      .then((data) => {
+        const opts: SelectOption[] = (data.institutions ?? []).map(
+          (inst: { id: string; name: string }) => ({ value: inst.id, label: inst.name })
+        );
+        setInstitutionOptions(opts);
+      })
+      .catch(() => setInstitutionOptions([]));
+  }, []);
+
+  useEffect(() => {
+    if (!draft.institutionId) {
+      setCareerOptions([]);
+      setCampusOptions([]);
+      return;
+    }
+
+    fetch(`/api/institutions/${draft.institutionId}/careers`)
+      .then((r) => r.json())
+      .then((data) => {
+        const opts: SelectOption[] = (data.careers ?? []).map(
+          (c: { id: string; name: string }) => ({ value: c.name, label: c.name })
+        );
+        setCareerOptions(opts);
+      })
+      .catch(() => setCareerOptions([]));
+
+    fetch(`/api/institutions/${draft.institutionId}/campuses`)
+      .then((r) => r.json())
+      .then((data) => {
+        const opts: SelectOption[] = (data.campuses ?? []).map(
+          (c: { id: string; name: string }) => ({ value: c.name, label: c.name })
+        );
+        setCampusOptions(opts);
+      })
+      .catch(() => setCampusOptions([]));
+  }, [draft.institutionId]);
 
   const hasInstitution = Boolean(draft.institutionId);
 
@@ -127,53 +167,42 @@ export function RegisterForm() {
     });
   }
 
-// DESPUÉS — agrega estos dos estados arriba de la función handleSubmit:
-const [isLoading, setIsLoading] = useState(false);
-const [serverError, setServerError] = useState<string | null>(null);
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setTouched(ALL_TOUCHED);
+    if (!canSubmit) return;
 
-// Y reemplaza handleSubmit completo:
-async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  setTouched(ALL_TOUCHED);
-  if (!canSubmit) return;
+    setIsLoading(true);
+    setServerError(null);
 
-  setIsLoading(true);
-  setServerError(null);
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: draft.fullName,
+          email: draft.email,
+          password: draft.password,
+          institutionId: draft.institutionId,
+          career: draft.career,
+          campus: draft.campus,
+        }),
+      });
 
-  try {
-    // Llamamos al backend que creamos en el Archivo 1
-    // Usamos los mismos nombres de campo que ya tiene tu formulario
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: draft.fullName,
-        email: draft.email,
-        password: draft.password,
-        institutionId: draft.institutionId,
-        career: draft.career,
-        campus: draft.campus,
-      }),
-    });
+      const data = await response.json();
 
-    const data = await response.json();
+      if (!response.ok) {
+        setServerError(data.error || "Error al crear la cuenta.");
+        return;
+      }
 
-    if (!response.ok) {
-      // El servidor rechazó el registro (ej: email ya existe)
-      setServerError(data.message);
-      return;
+      router.push("/login?registered=true");
+    } catch {
+      setServerError("Error de conexión. Intenta nuevamente.");
+    } finally {
+      setIsLoading(false);
     }
-
-    // Todo salió bien: redirigimos al login
-    // Importa useRouter de next/navigation al inicio del archivo
-    router.push("/login?registered=true");
-
-  } catch {
-    setServerError("Error de conexión. Intenta nuevamente.");
-  } finally {
-    setIsLoading(false);
   }
-}
 
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
@@ -310,7 +339,7 @@ async function handleSubmit(e: React.FormEvent) {
         <p className="text-sm text-destructive">{serverError}</p>
       )}
       <Button className="w-full" disabled={!canSubmit || isLoading} type="submit">
-      {isLoading ? "Creando cuenta..." : "Crear cuenta"}
+        {isLoading ? "Creando cuenta..." : "Crear cuenta"}
       </Button>
 
       <p className="text-center text-sm text-text-secondary">
@@ -321,8 +350,4 @@ async function handleSubmit(e: React.FormEvent) {
       </p>
     </form>
   );
-}
-
-function toOptions(values: string[]) {
-  return values.map((v) => ({ value: v, label: v }));
 }

@@ -1,37 +1,65 @@
-import type { AuthSession, RegisterCredentials, SignInCredentials } from "../types";
+interface RegisterCredentials {
+  fullName: string;
+  email: string;
+  password: string;
+  institutionId: string;
+  career?: string;
+  campus?: string;
+}
 
-/**
- * Communicates with /api/auth — never with Firebase SDK directly.
- *
- * Architectural rule:
- *   features/auth  →  /api/auth (BFF)  →  Firebase Auth (server-side)
- *
- * When implementing, replace each throw with a fetch() call to the BFF:
- *   POST /api/auth/signin    exchange credentials → session cookie
- *   POST /api/auth/register  create account → session cookie
- *   POST /api/auth/signout   invalidate session cookie
- *   GET  /api/auth/session   read session from HttpOnly cookie → AuthSession
- */
+interface AuthResponse {
+  ok: boolean;
+  error?: string;
+  uid?: string;
+}
+
 export const authClient = {
-  /** POST /api/auth/signin */
-  async signIn(_credentials: SignInCredentials): Promise<AuthSession> {
-    void _credentials;
-    throw new Error("authClient.signIn: BFF /api/auth not yet implemented");
+  async register(credentials: RegisterCredentials): Promise<AuthResponse> {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return { ok: false, error: data.error || "Error al registrar usuario." };
+      }
+
+      return { ok: true, uid: data.uid };
+    } catch {
+      return { ok: false, error: "Error de conexión. Intenta nuevamente." };
+    }
   },
 
-  /** POST /api/auth/register */
-  async register(_credentials: RegisterCredentials): Promise<AuthSession> {
-    void _credentials;
-    throw new Error("authClient.register: BFF /api/auth not yet implemented");
+  async createSession(idToken: string): Promise<AuthResponse> {
+    try {
+      const res = await fetch("/api/auth/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ idToken }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return { ok: false, error: data.error || "Error al crear sesión." };
+      }
+
+      return { ok: true };
+    } catch {
+      return { ok: false, error: "Error de conexión al crear sesión." };
+    }
   },
 
-  /** POST /api/auth/signout */
   async signOut(): Promise<void> {
-    throw new Error("authClient.signOut: BFF /api/auth not yet implemented");
-  },
-
-  /** GET /api/auth/session — returns null when unauthenticated */
-  async getSession(): Promise<AuthSession | null> {
-    return null;
+    await fetch("/api/auth/session", {
+      method: "DELETE",
+      credentials: "include",
+    });
   },
 };
